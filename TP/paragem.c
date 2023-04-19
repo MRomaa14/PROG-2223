@@ -20,12 +20,15 @@ paragem obtemInfo(paragem *tab, int n){
     paragem t;
     int existe, i;
 
-    printf("\n\t\t-----NOVA PARAGEM-----\n");
+    printf("\n\t\t\t\t\t  --------------------------------------------\n");
+    printf("\n\t\t\t\t\t  |          ADICIONAR NOVA PARAGEM          |\n");
+    printf("\n\t\t\t\t\t  --------------------------------------------\n");
 
     do{
         existe = 0;
         printf("Nome da paragem:");
-        scanf("%s", t.nome);
+        fgets(t.nome, sizeof(t.nome), stdin);
+        t.nome[strcspn(t.nome, "\n")] = '\0';
 
         for(i = 0; i < n; i++){
             if(strcmp(t.nome, tab[i].nome) == 0){
@@ -43,26 +46,29 @@ paragem obtemInfo(paragem *tab, int n){
     return t;
 }
 
+
 paragem* regParagem(paragem *tab, int *n){
-    paragem *aux = NULL;
-    aux = realloc(tab, sizeof(paragem) * (*n+1));
+    char ch;
 
-    fflush(stdin);
-    system("cls");
+    do{
+        paragem *aux = realloc(tab, sizeof(paragem) * (*n+1));
 
-    printf("Realloc num %d", *n+1);
-    if(aux != NULL){
-        tab = aux;
+        fflush(stdin);
+        system("cls");
 
+        if(aux != NULL){
+            tab = aux;
+            tab[*n] = obtemInfo(tab, *n);
+            (*n)++;
+        }
 
-        tab[*n] = obtemInfo(tab, *n);
-        (*n)++;
-        printf("Paragem registada com sucesso!\n");
-    }
-    else{
-        printf("ERRO na alocacao de memoria!\n");
-        return tab;
-    }
+        printf("\n-> Pretende adicionar outra paragem? (S/N)");
+        do{
+            ch = getchar();
+            fflush(stdin);
+        }while(ch != 'S' && ch != 's' && ch != 'N' && ch != 'n');
+
+    }while(ch == 'S' || ch == 's');
 
     return tab;
 }
@@ -70,45 +76,67 @@ paragem* regParagem(paragem *tab, int *n){
 paragem* elimParagem(paragem* tab, int *n){
     paragem t, *aux;
     int i;
+    char ch;
 
-    fflush(stdin);
-    system("cls");
+    do{
+        fflush(stdin);
+        system("cls");
 
-    char cod[5];
-    printf("Codigo da paragem a eliminar:");
-    scanf("%s", cod);
+        printf("\n\t\t\t\t\t  --------------------------------------------\n");
+        printf("\n\t\t\t\t\t  |             ELIMINAR PARAGEM             |\n");
+        printf("\n\t\t\t\t\t  --------------------------------------------\n");
 
-    for(i = 0; i < *n && tab[i].codigo != cod; i++);
+        char cod[5];
+        printf("Codigo da paragem a eliminar:");
+        fgets(cod, sizeof(cod), stdin);
+        cod[strcspn(cod, "\n")] = '\0';
 
-    if(tab[i].numLinhas == 0){
-        if(i == *n){    //Chegou ao fim e nao encontrou nenhuma paragem com esse nome
-            printf("Paragem nao existe\n");
-        }
-        else if(*n == 1){   //So existe 1 paragem no sistema pelo que podemos dar free
-            free(tab);
-            *n = 0;
-            return NULL;
-        }
-        else{   //Se houver mais que 1 paragem no sistema
-            t = tab[i];
-            tab[i] = tab[*n-1];
-            aux = realloc(tab, sizeof(paragem) * (*n-1));
+        for(i = 0; i < *n && (strcmp(tab[i].codigo,cod) != 0); i++);
 
-            if(aux != NULL){
-                tab = aux;
-                (*n)--;
+        if(tab[i].numLinhas == 0){
+            if(i == *n){    //Chegou ao fim e nao encontrou nenhuma paragem com esse nome
+                printf("Nao existe nenhuma paragem registada com o codigo!\n");
             }
-            else
-                tab[i] = t;
+            else if(*n == 1){   //So existe 1 paragem no sistema pelo que podemos dar free
+                printf("Paragem [ %s ] eliminada com sucesso!\n", tab[i].nome);
 
-            return tab;
+                free(tab);
+                *n = 0;
+                return NULL;
+            }
+            else{   //Se houver mais que 1 paragem no sistema
+                printf("Paragem [ %s ] eliminada com sucesso!\n", tab[i].nome);
+
+                t = tab[i];
+                tab[i] = tab[*n-1];
+                aux = realloc(tab, sizeof(paragem) * (*n-1));
+
+
+                if(aux != NULL){
+                    tab = aux;
+                    (*n)--;
+                }
+                else{
+                    tab[i] = t;
+                }
+            }
         }
-    }
-    else{
-        printf("Esta paragem pertence a %d linhas\n", tab[i].numLinhas);
-        printf("Nao pode ser eliminada!!\n");
-        return tab;
-    }
+        else if(i == *n){
+            printf("Nenhuma paragem encontrada com o codigo [%s]!\n", cod);
+        }
+        else if(tab[i].numLinhas != 0){
+            printf("Esta paragem pertence a %d linhas\n", tab[i].numLinhas);
+            printf("Nao pode ser eliminada!!\n");
+        }
+
+        printf("-> Eliminar outra paragem? (S/N)");
+        do {
+            ch = getchar();
+            fflush(stdin);
+        } while (ch != 'S' && ch != 's' && ch != 'N' && ch != 'n');
+
+    } while (ch == 'S' || ch == 's');
+
     return tab;
 }
 
@@ -119,12 +147,22 @@ void listaParagens(paragem *tab, int n){
     fflush(stdin);
     system("cls");
 
-    printf("EXISTEM %d PARAGENS REGISTADAS NO SISTEMA\n", n);
+    if(n == 1){
+        printf("\n\t\t\t\t\t  --------------------------------------------\n");
+        printf("\n\t\t\t\t\t  |   EXISTE 1 PARAGEM REGISTADA NO SISTEMA  |\n");
+        printf("\n\t\t\t\t\t  --------------------------------------------\n");
+    }
+    else{
+        printf("\n\t\t\t\t\t  --------------------------------------------\n");
+        printf("\n\t\t\t\t\t  | EXISTEM %d PARAGENS REGISTADAS NO SISTEMA |\n", n);
+        printf("\n\t\t\t\t\t  --------------------------------------------\n");
+    }
+
     for(i = 0; i < n; i++){
-        printf("\n\t\t-----PARAGEM %d-----\n", i+1);
-        printf("Nome: %s\n", tab[i].nome);
-        printf("Codigo: %s\n", tab[i].codigo);
-        printf("Pertence a %d linhas\n", tab[i].numLinhas);
+        printf("|------- PARAGEM NUMERO %d ------|\n", i+1);
+        printf("\tNome: %s\n", tab[i].nome);
+        printf("\tCodigo: %s\n", tab[i].codigo);
+        printf("\tPertence a %d linhas\n", tab[i].numLinhas);
     }
     printf("\n-> ENTER para voltar ao menu anterior");
 
@@ -133,13 +171,3 @@ void listaParagens(paragem *tab, int n){
         fflush(stdin);
     }while( ch != '\n');
 }
-
-
-/*
-printf("\n-> Deseja adicionar outra paragem (Y|N)? ");
-
-do{
-    scanf("%c", &ch);
-    fflush(stdin);
-}while(ch != 'Y' && ch != 'y' && ch != 'N' && ch != 'n');
- */

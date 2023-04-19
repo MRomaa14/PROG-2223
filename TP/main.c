@@ -6,46 +6,49 @@
 
 int main(){
     paragem *sistema = NULL; //adicionar paragens no array dinamico
-
-    sistema = malloc(sizeof(paragem));
-    if(sistema == NULL){
-        printf("Erro na alocacao de memoria\n");
-        return 1;
-    }
-
-    int total = 0;
-    for(int i = 0; i < 3; i++){
-        regParagem(sistema, &total);
-    }
-    listaParagens(sistema, total);
-
-    elimParagem(sistema, &total);
-    listaParagens(sistema, total);
-    /*
-    linha *paragens = NULL; //adicionar linhas na lista ligada
+    linha *linhas = NULL; //adicionar linhas na lista ligada
     FILE* dados; //adicionar linha pelo ficheiro de texto
 
     int total = 0;
-    int opt = 0;
-    int num;
+    int opt_inic, opt_perc, opt_lin, opt_parag;
 
-    while(1){
-        opt = menuInicial();
-        switch (opt) {
+    sistema = inicParagem();
+
+    do{
+        opt_inic = menuInicial();
+        switch (opt_inic) {
             case 1:
+                do{
+                    opt_perc = menuPercurso();
+                    switch (opt_perc) {
+                        case 1:
+                            addParagem(linhas);
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            listaLinhas(linhas);
+                            break;
+                        case 4:
+                            break;
+                        default:
+                            printf("Opcao invalida!\n");
+                            break;
+                    }
+                }while(opt_perc != 4);
                 break;
             case 2:
-                while(1){
-                    opt = menuLinhas();
-                    switch(opt){
+                do{
+                    opt_lin = menuLinhas();
+                    switch(opt_lin){
                         case 1:
-                            addParagem(paragens, &total);
+                            addParagem(linhas);
                             break;
                         case 2:
                             elimParagem(sistema, &total);
                             break;
                         case 3:
-                            listaParagens(sistema, total);
+                            listaLinhas(linhas);
                             break;
                         case 4:
                             break;
@@ -53,19 +56,17 @@ int main(){
                             printf("Opcao invalida!\n");
                             break;
                     }
-                    if(opt == 4)
-                        break;
-                }
+                }while(opt_lin != 4);
                 break;
             case 3:
-                while(1){
-                    opt = menuParagens();
-                    switch(opt){
+                do{
+                    opt_parag = menuParagens();
+                    switch(opt_parag){
                         case 1:
-                            regParagem(sistema, &total);
+                            sistema = regParagem(sistema, &total);
                             break;
                         case 2:
-                            elimParagem(sistema, &total);
+                            sistema = elimParagem(sistema, &total);
                             break;
                         case 3:
                             listaParagens(sistema, total);
@@ -76,19 +77,16 @@ int main(){
                             printf("Opcao invalida!\n");
                             break;
                     }
-                    if(opt == 4)
-                        break;
-                }
+                }while(opt_parag != 4);
                 break;
             case 4:
                 break;
             default:
-                printf("Ainda nao sei o que meter aqui acho que vou trocar por if's");
+                printf("Opcao invalida!\n");
                 break;
         }
-    }
-*/
+    }while(opt_inic != 4);
+
     free(sistema);
     return 0;
-
 }

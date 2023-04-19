@@ -8,12 +8,13 @@
 #include <time.h>
 #include <string.h>
 
-typedef struct paragem paragem;
+typedef struct paragem paragem, *pparagem;
 struct paragem{
-    char nome[50];
+    char nome[100];
     char codigo[5];
     int numLinhas;
 };
+
 paragem* inicParagem();
 
 paragem obtemInfo(paragem *tab, int n);

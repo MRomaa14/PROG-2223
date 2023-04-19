@@ -3,14 +3,9 @@
 #ifndef TP_P_MENUS_H
 #define TP_P_MENUS_H
 
-#include "paragem.h"
-#include "linha.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 int menuInicial();
+
+int menuPercurso();
 
 int menuLinhas();
 

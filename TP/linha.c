@@ -2,12 +2,15 @@
 
 #include "linha.h"
 
-void preenche(plinha* p){
+void preenche(plinha p){
     printf("Nova linha:");
+    fgets(p->nome, sizeof(p->nome), stdin);
+    p->nome[strcspn(p->nome, "\n")] = '\0';
 
+    p->prox = NULL;
 }
 
-plinha addParagem(plinha* p, char* lin){
+plinha addParagem(plinha p){
     plinha novo = NULL;
     plinha aux = NULL;
 
@@ -16,7 +19,7 @@ plinha addParagem(plinha* p, char* lin){
         printf("Erro na alocacao de memoria\n");
         return p;
     }
-    preenche(&p);
+    preenche(p);
 
     if(p == NULL)
         p = novo;
@@ -29,11 +32,51 @@ plinha addParagem(plinha* p, char* lin){
     return p;
 }
 
-//plinha addLinha(Linha);
+/*
 
-plinha delLinha(plinha p, char* lin){
+void elimParagemLinha(plinha p, pparagem par) {
+    char *cod;
+    char *nomeLinha;
+
+    printf("-> Linha a alterar: ");
+    fgets(nomeLinha, sizeof(nomeLinha), stdin);
+    nomeLinha[strcspn(nomeLinha, "\n")] = '\0';
+
+    printf("-> Paragem a eliminar: ");
+    scanf("%s", cod);
+
+    while(p != NULL) {
+        if(strcmp(p->nome, nomeLinha) == 0) {
+            int i;
+            for(i = 0; i < p->nParag; i++) {
+                if(strcmp(par->codigo, cod) == 0) {
+                    // encontrou a paragem a remover
+                    // mover todas as paragens seguintes para a posição anterior
+                    int j;
+                    for(j = i; j < p->nParag-1; j++) {
+                        strcpy(p->nome[j], p->nome[j+1]);
+                    }
+                    p->nParag--;
+                    printf("Paragem %s eliminada da linha %s\n", nomeParagem, nomeLinha);
+                    return;
+                }
+            }
+            // a paragem não foi encontrada na linha
+            printf("Paragem %s nao encontrada na linha %s\n", nomeParagem, nomeLinha);
+            return;
+        }
+        p = p->prox;
+    }
+    // a linha não foi encontrada
+    printf("Linha %s nao encontrada\n", nomeLinha);
+}
+
+
+plinha delParagemLinha(plinha p){
     plinha atual, anterior = NULL;
     atual = p;
+
+
     while(atual != NULL && atual->nome != lin)
     {
         anterior = atual;
@@ -49,17 +92,17 @@ plinha delLinha(plinha p, char* lin){
     return p;
 }
 
+*/
+int contaLinhas(plinha p){
+    while(p != NULL){
 
-int lista_vazia(plinha p){
-    if(p == NULL)
-        return 1;
-    else
-        return 0;
+    }
 }
 
 void listaLinhas(plinha p){
     char ch;
 
+    fflush(stdin);
     system("cls");
 
     if(p != NULL){
@@ -70,7 +113,9 @@ void listaLinhas(plinha p){
         }
     }
     else {
-        printf("Nao existe nenhuma linha no sistema de mobilidade!\n");
+        printf("\n\t\t\t\t\t  --------------------------------------------\n");
+        printf("\n\t\t\t\t\t  |  EXISTEM 0 LINHAS REGISTADAS NO SISTEMA  |\n");
+        printf("\n\t\t\t\t\t  --------------------------------------------\n");
     }
     printf("\n-> ENTER para voltar ao menu anterior");
 
