@@ -1,9 +1,8 @@
 // Miguel Umbelino da Mota Roma - a2021138955
 
 #include "paragem.h"
-#include "utils.h"
 
-paragem* inicParagem(){
+pparagem inicParagem(){
     paragem* aux = NULL;
 
     aux = malloc(sizeof(paragem));
@@ -32,7 +31,7 @@ paragem obtemInfo(paragem *tab, int n){
 
         for(i = 0; i < n; i++){
             if(strcmp(t.nome, tab[i].nome) == 0){
-                printf("Linha com esse nome ja se encontra no sistema!\n\n");
+                printf("Uma paragem com esse nome ja se encontra no sistema!\n\n");
                 existe = 1;
             }
         }
@@ -47,7 +46,7 @@ paragem obtemInfo(paragem *tab, int n){
 }
 
 
-paragem* regParagem(paragem *tab, int *n){
+pparagem regParagem(paragem *tab, int *n){
     char ch;
 
     do{
@@ -73,7 +72,7 @@ paragem* regParagem(paragem *tab, int *n){
     return tab;
 }
 
-paragem* elimParagem(paragem* tab, int *n){
+pparagem elimParagem(paragem* tab, int *n){
     paragem t, *aux;
     int i;
     char ch;
@@ -163,6 +162,8 @@ void listaParagens(paragem *tab, int n){
         printf("\tNome: %s\n", tab[i].nome);
         printf("\tCodigo: %s\n", tab[i].codigo);
         printf("\tPertence a %d linhas\n", tab[i].numLinhas);
+
+        putchar('\n');
     }
     printf("\n-> ENTER para voltar ao menu anterior");
 

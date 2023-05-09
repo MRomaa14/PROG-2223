@@ -3,31 +3,25 @@
 #ifndef TP_P_LINHA_H
 #define TP_P_LINHA_H
 
+#include "utils.h"
 #include "paragem.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
 
 typedef struct linha linha, *plinha;
 struct linha{
     char nome[100];
     int nParag;
 
-
+    pparagem lista;
     plinha prox;
 };
 
-void preenche(plinha p);
+int contaNos(plinha p);
 
-plinha addParagem(plinha p);
+plinha regLinha(plinha p);
 
-plinha delLinha(plinha p);
+void listarLinhas(plinha p);
 
-int contaLinhas(plinha p);
-
-void listaLinhas(plinha p);
+void listarLinhasParagem(plinha p);
 
 void procuraLinha(plinha p, char* proc);
 

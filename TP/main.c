@@ -22,12 +22,13 @@ int main(){
                     opt_perc = menuPercurso();
                     switch (opt_perc) {
                         case 1:
-                            addParagem(linhas);
+                            //criarLinha(linhas);
                             break;
                         case 2:
+
                             break;
                         case 3:
-                            listaLinhas(linhas);
+                            listarLinhasParagem(linhas);
                             break;
                         case 4:
                             break;
@@ -42,13 +43,13 @@ int main(){
                     opt_lin = menuLinhas();
                     switch(opt_lin){
                         case 1:
-                            addParagem(linhas);
+                            linhas = regLinha(linhas);
                             break;
                         case 2:
                             elimParagem(sistema, &total);
                             break;
                         case 3:
-                            listaLinhas(linhas);
+                            listarLinhas(linhas);
                             break;
                         case 4:
                             break;
@@ -74,7 +75,7 @@ int main(){
                         case 4:
                             break;
                         default:
-                            printf("Opcao invalida!\n");
+                            printf("Nenhuma opcao valida inserida!\n");
                             break;
                     }
                 }while(opt_parag != 4);

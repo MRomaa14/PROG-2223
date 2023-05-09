@@ -3,6 +3,8 @@
 #ifndef TP_P_MENUS_H
 #define TP_P_MENUS_H
 
+#include "utils.h"
+
 int menuInicial();
 
 int menuPercurso();

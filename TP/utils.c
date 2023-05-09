@@ -31,3 +31,5 @@ int lerFich(char *nomeF){
 }
 
 
+
+

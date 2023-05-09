@@ -3,25 +3,24 @@
 #ifndef TP_P_PARAGEM_H
 #define TP_P_PARAGEM_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
+#include "utils.h"
 
 typedef struct paragem paragem, *pparagem;
 struct paragem{
     char nome[100];
     char codigo[5];
     int numLinhas;
+
+    pparagem prox;
 };
 
-paragem* inicParagem();
+pparagem inicParagem();
 
 paragem obtemInfo(paragem *tab, int n);
 
-paragem* regParagem(paragem *tab, int *n);
+pparagem regParagem(paragem *tab, int *n);
 
-paragem* elimParagem(paragem *tab, int *n);
+pparagem elimParagem(paragem *tab, int *n);
 
 void listaParagens(paragem *tab, int n);
 

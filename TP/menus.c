@@ -1,7 +1,7 @@
 // Miguel Umbelino da Mota Roma - a2021138955
 
 #include "menus.h"
-#include "utils.h"
+
 
 int menuInicial(){
     int opt;
@@ -22,6 +22,7 @@ int menuInicial(){
 
     printf("-> Digite uma opcao: ");
     scanf("%d", &opt);
+    fflush(stdin);
 
     return opt;
 }
@@ -45,6 +46,7 @@ int menuPercurso(){
 
     printf("-> Digite uma opcao:");
     scanf("%d", &opt);
+    fflush(stdin);
 
     return opt;
 }
@@ -68,6 +70,7 @@ int menuLinhas(){
 
     printf("-> Digite uma opcao:");
     scanf("%d", &opt);
+    fflush(stdin);
 
     return opt;
 }
@@ -91,6 +94,7 @@ int menuParagens(){
 
     printf("-> Digite uma opcao: ");
     scanf("%d", &opt);
+    fflush(stdin);
 
     return opt;
 }
