@@ -31,16 +31,15 @@ int menuPercurso(){
     int opt;
 
     system("cls");
-    lerFich("linha.txt");
+    lerFich("percurso.txt");
 
-    printf("\t\t\t\t    --------------------------------------------\n");
-    printf("\t\t\t\t    |             Miguel Roma - TP             |\n");
-    printf("\t\t\t\t    --------------------------------------------\n");
-    printf("\t\t\t\t    |       [   1 - Adicionar linha    ]       |\n");
-    printf("\t\t\t\t    |       [   2 - Atualizar linha    ]       |\n");
-    printf("\t\t\t\t    |       [   3 - Visualizar linhas  ]       |\n");
-    printf("\t\t\t\t    |       [   4 - Voltar             ]       |\n");
-    printf("\t\t\t\t    --------------------------------------------\n");
+    printf("\t\t\t\t    ---------------------------------------------\n");
+    printf("\t\t\t\t    |             Miguel Roma - TP              |\n");
+    printf("\t\t\t\t    ---------------------------------------------\n");
+    printf("\t\t\t\t    |        [   1 - Linha unica       ]        |\n");
+    printf("\t\t\t\t    |        [   2 - Mudanca de linha  ]        |\n");
+    printf("\t\t\t\t    |        [   3 - Voltar            ]        |\n");
+    printf("\t\t\t\t    ---------------------------------------------\n");
 
     putchar('\n');
 
@@ -61,9 +60,10 @@ int menuLinhas(){
     printf("\t\t\t\t    |             Miguel Roma - TP             |\n");
     printf("\t\t\t\t    --------------------------------------------\n");
     printf("\t\t\t\t    |       [   1 - Adicionar linha    ]       |\n");
-    printf("\t\t\t\t    |       [   2 - Atualizar linha    ]       |\n");
+    printf("\t\t\t\t    |       [   2 - Eliminar linha     ]       |\n");
     printf("\t\t\t\t    |       [   3 - Visualizar linhas  ]       |\n");
-    printf("\t\t\t\t    |       [   4 - Voltar             ]       |\n");
+    printf("\t\t\t\t    |       [   4 - Linhas com paragem ]       |\n");
+    printf("\t\t\t\t    |       [   5 - Voltar             ]       |\n");
     printf("\t\t\t\t    --------------------------------------------\n");
 
     putchar('\n');

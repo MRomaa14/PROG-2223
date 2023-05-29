@@ -12,7 +12,8 @@ int main(){
     int total = 0;
     int opt_inic, opt_perc, opt_lin, opt_parag;
 
-    sistema = inicParagem();
+    //sistema = inicParagem();
+    sistema = leParagens(&total);
 
     do{
         opt_inic = menuInicial();
@@ -25,39 +26,39 @@ int main(){
                             //criarLinha(linhas);
                             break;
                         case 2:
-
+                            //linhamultipla();
                             break;
                         case 3:
-                            listarLinhasParagem(linhas);
-                            break;
-                        case 4:
                             break;
                         default:
                             printf("Opcao invalida!\n");
                             break;
                     }
-                }while(opt_perc != 4);
+                }while(opt_perc != 3);
                 break;
             case 2:
                 do{
                     opt_lin = menuLinhas();
                     switch(opt_lin){
                         case 1:
-                            linhas = regLinha(linhas);
+                            linhas = regLinha(linhas, sistema, total);
                             break;
                         case 2:
-                            elimParagem(sistema, &total);
+                            addParagemLinha(linhas, sistema, total);
                             break;
                         case 3:
                             listarLinhas(linhas);
                             break;
                         case 4:
+                            listarLinhasParagem(linhas, sistema, total);
+                            break;
+                        case 5:
                             break;
                         default:
                             printf("Opcao invalida!\n");
                             break;
                     }
-                }while(opt_lin != 4);
+                }while(opt_lin != 5);
                 break;
             case 3:
                 do{
@@ -81,6 +82,7 @@ int main(){
                 }while(opt_parag != 4);
                 break;
             case 4:
+                guardaParagens(sistema, total);
                 break;
             default:
                 printf("Opcao invalida!\n");
@@ -89,5 +91,6 @@ int main(){
     }while(opt_inic != 4);
 
     free(sistema);
+    free(linhas);
     return 0;
 }

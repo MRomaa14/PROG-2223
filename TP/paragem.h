@@ -24,4 +24,8 @@ pparagem elimParagem(paragem *tab, int *n);
 
 void listaParagens(paragem *tab, int n);
 
+void guardaParagens(paragem *p, int total);
+
+pparagem leParagens(int *total);
+
 #endif

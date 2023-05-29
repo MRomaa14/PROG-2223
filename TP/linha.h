@@ -17,13 +17,16 @@ struct linha{
 
 int contaNos(plinha p);
 
-plinha regLinha(plinha p);
+pparagem procuraParagem(pparagem pp, int n, char *nomeParagem);
+
+void addParagemLinha(plinha p, pparagem b, int n);
+
+plinha regLinha(plinha p, pparagem parag, int n);
 
 void listarLinhas(plinha p);
 
-void listarLinhasParagem(plinha p);
+void listarLinhasParagem(plinha p, pparagem pp, int n);
 
 void procuraLinha(plinha p, char* proc);
-
 
 #endif //TP_P_LINHA_H

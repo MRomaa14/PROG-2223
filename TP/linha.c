@@ -3,9 +3,9 @@
 #include "linha.h"
 #include "paragem.h"
 
-int contaNos(plinha p) {
+//CONTA OS NÓS NA LISTA LIGADA PRINCIPAL (DAS LINHAS)
+int contaNos(plinha p){
     int cont = 0;
-
     while(p != NULL){
         cont++;
         p = p->prox;
@@ -13,15 +13,24 @@ int contaNos(plinha p) {
     return cont;
 }
 
-plinha regLinha(plinha p){
+//VERIFICA SE A PARAGEM PASSADA COMO ARGUMENTO EXISTE NO SISTEMA
+pparagem procuraParagem(pparagem pp, int n, char *nomeParagem){
+    pparagem aux = pp;
+    for (int i = 0; i < n; i++) {
+        if (strcmp(aux[i].nome, nomeParagem) == 0) {
+            return aux;
+        }
+    }
+    return NULL;
+}
+
+//REGISTAR UMA LINHA NA LISTA LIGADA E PARAGEM OBRIGATORIA
+plinha regLinha(plinha p, pparagem pp, int n){
     plinha novo, aux;
+    pparagem pnova, verf;
 
-    char nomeLinha[100];
-    int existe;
-
-    novo = malloc(sizeof(linha));
-    if(novo == NULL)
-        return p;
+    char nomeLinha[100], nomeParagem[100], ch;
+    int existe, encontrado, i;
 
     fflush(stdin);
     system("cls");
@@ -29,6 +38,12 @@ plinha regLinha(plinha p){
     printf("\n\t\t\t\t\t  --------------------------------------------\n");
     printf("\n\t\t\t\t\t  |           ADICIONAR NOVA LINHA           |\n");
     printf("\n\t\t\t\t\t  --------------------------------------------\n");
+
+    novo = malloc(sizeof(linha));
+    if(novo == NULL){
+        printf("ERRO na alocacao de memoria da LINHA\n");
+        return p;
+    }
 
     do{
         existe = 0;
@@ -39,7 +54,7 @@ plinha regLinha(plinha p){
 
         while(aux != NULL){
             if(strcmp(aux->nome, nomeLinha) == 0){
-                printf("[AVISO] LINHA COM ESSE NOME JA SE ENCONTRA REGISTADA!\n\n");
+                printf("Linha [%s] JA REGISTADA!\n\n", nomeLinha);
                 existe = 1;
                 break;
             }
@@ -63,66 +78,173 @@ plinha regLinha(plinha p){
         aux->prox = novo;
     }
 
-    /* add paragens to the new linha
-    do {
-        encontrada = 0;
-        printf("Digite o nome da paragem que deseja adicionar a esta linha (ou 0 para parar): ");
-        scanf(" %99[^\n]", nomeLinha);
+    do{
+        encontrado = 0;
 
-        // search for the paragem in the system
-        paragem_atual = paragens;
-        paragem_anterior = NULL;
-        while (paragem_atual != NULL) {
-            if (strcmp(paragem_atual->nome, nomeLinha) == 0) {
-                encontrada = 1;
-                break;
-            }
-            paragem_anterior = paragem_atual;
-            paragem_atual = paragem_atual->prox;
+        printf("Nome da paragem: ");
+        scanf(" %99[^\n]", nomeParagem);
+
+        pparagem temp = procuraParagem(pp, n, nomeParagem);
+        if(temp == NULL){
+            printf("NENHUMA paragem com o nome [%s] no SISTEMA\n", nomeParagem);
+            encontrado = 1;
         }
+        else {
+            pnova = malloc(sizeof(paragem));
+            if (pnova == NULL) {
+                printf("ERRO ao alocar memoria para PARAGEM!\n");
+                return p;
+            }
 
-        if (encontrada) {
-            // add the paragem to the new linha
+            /*
+            verf = novo->lista;
+            while (verf != NULL) {
+                if (strcmp(verf->nome, nomeParagem) == 0) {
+                    printf("Paragem [%s] JA se encontra na LINHA!\n", nomeParagem);
+                    encontrado = 1;
+                    break;
+                }
+                verf = verf->prox;
+            }
+            if (encontrado == 1)
+                break;
+        */
+
+            strcpy(pnova->nome, nomeParagem);
+            strcpy(pnova->codigo, temp->codigo);
+            temp->numLinhas++;
+
             if (novo->lista == NULL) {
-                novo->lista = paragem_atual;
-                paragem_atual->numLinhas++;
-            } else {
-                paragem_anterior->prox = paragem_atual;
-                paragem_atual->numLinhas++;
+                novo->lista = pnova;
+            }
+            else {
+                verf = novo->lista;
+                while (verf->prox != NULL)
+                    verf = verf->prox;
+                verf->prox = pnova;
             }
             novo->nParag++;
-        } else if (strcmp(nomeLinha, "0") != 0) {
-            printf("[AVISO] PARAGEM NAO ENCONTRADA!\n\n");
         }
 
-    } while (strcmp(nomeLinha, "0") != 0 && novo->nParag == 0);
-     */
+        printf("\n-> Inserir outra paragem? (S/N)");
+        do{
+            ch = getchar();
+            fflush(stdin);
+        }while(ch != 'S' && ch != 's' && ch != 'N' && ch != 'n');
+
+    }while(encontrado == 1 || ch == 'S' || ch == 's');
+
     return p;
+        /*
+        if(verificaParagem(pp, n, nomeParagem) == 0){
+            pnova = novo->lista;
+            while(pnova != NULL){
+                if(strcmp(pnova->nome, nomeParagem) == 0){
+                    printf("Paragem [%s] JA se encontra na LINHA!\n", nomeParagem);
+                    encontrado = 1;
+                    break;
+                }
+                pnova = pnova->prox;
+            }
+
+            if(encontrado == 0){
+                pnova = malloc(sizeof(paragem));
+                if(pnova == NULL){
+                    printf("ERRO ao alocar memoria para PARAGEM!\n");
+                    return p;
+                }
+
+                strcpy(pnova->nome, nomeParagem);
+                pnova->numLinhas = 1;
+                pnova->prox = NULL;
+
+                if (novo->lista == NULL) {
+                    novo->lista = pnova;
+                } else {
+                    temp = novo->lista;
+                    while (temp->prox != NULL)
+                        temp = temp->prox;
+                    temp->prox = pnova;
+                }
+
+                novo->nParag++;
+            }
+        }
+        else{
+            printf("NENHUMA paragem com o nome [%s] no SISTEMA\n", nomeParagem);
+            encontrado = 1;
+        }
+    */
 }
 
-/*
-void adicParagem(plinha p){
+
+void addParagemLinha(plinha p, pparagem b, int n){
     pparagem novo;
-    char nomeLinha[100];
+    pparagem aux;
 
+    system("cls");
+    fflush(stdin);
 
+    char nomeLinha[100], nomeParagem[100], ch;
+    int i;
 
-    while(p != NULL && strcmp(p->nome, n_d) != 0)
-        p = p->prox;
-    if(p != NULL){
-        novo = malloc(sizeof(paragem));
-        if(novo == NULL) {
+    printf("\n\t\t\t\t\t  --------------------------------------------\n");
+    printf("\n\t\t\t\t\t  |         ADICIONAR PARAGEM A LINHA        |\n");
+    printf("\n\t\t\t\t\t  --------------------------------------------\n");
+
+    do{
+        printf("Nome da linha a atualizar: ");
+        scanf(" %99[^\n]", nomeLinha);
+
+        while(p != NULL && (strcmp(p->nome, nomeLinha) != 0)){
+            p = p->prox;
+        }
+
+        if(p == NULL){
+            printf("LINHA com o nome [%s] NAO registada!\n", nomeLinha);
             return;
         }
+        else{
+            printf("Paragem a adicionar: ");
+            scanf(" %99[^\n]", nomeParagem);
 
-        strcpy(novo->nome, n_al);
-        strcpy(novo->numero, id);
-        novo->prox = p->lista; //insere no inicio
-        p->lista = novo;
-        p->nParag++;
-    }
+            for(i = 0; i < n; i++){
+                if(strcmp(b[i].nome, nomeParagem) == 0){
+                    novo = malloc(sizeof(paragem));
+                    if(novo == NULL)
+                        return;
+
+                    strcpy(novo->nome, nomeLinha);
+                    strcpy(novo->codigo, b[i].codigo);
+                    b[i].numLinhas++;
+
+                    p->nParag++;
+                    novo->prox = p->lista;
+                    p->lista = novo;
+                }
+            }
+
+            while(p != NULL){
+                aux = p->lista;
+                while(aux != NULL){
+                    if(strcmp(nomeParagem, aux->nome) == 0){
+                        printf("Paragem ja se encontra definida na linha!\n");
+                    }
+                    aux = aux->prox;
+                }
+                p = p->prox;
+            }
+
+        }
+
+        printf("\n-> Inserir outra paragem? (S/N)");
+        do{
+            ch = getchar();
+            fflush(stdin);
+        }while(ch != 'S' && ch != 's' && ch != 'N' && ch != 'n');
+
+    }while(ch == 'S' || ch == 's');
 }
-*/
 
 /*
 void elimParagemLinha(plinha p, pparagem par) {
@@ -166,7 +288,7 @@ void elimParagemLinha(plinha p, pparagem par) {
 void listarLinhas(plinha p){
     pparagem aux;
     char ch;
-    int n;
+    int n, i = 1;
 
     fflush(stdin);
     system("cls");
@@ -187,12 +309,13 @@ void listarLinhas(plinha p){
 
         while(p != NULL){
             printf("|------- LINHA '%s' -------|\n", p->nome);
-            printf(" [%d] paragens:\n", p->nParag);
+            printf("\t  [%d] paragens\n\n", p->nParag);
             //p = p->prox;
             aux = p->lista;
             while(aux != NULL){
-                printf("\t%s\t%s\n", aux->nome, aux->codigo);
+                printf("%d. Nome:%s Codigo:%s\n", i, aux->nome, aux->codigo);
                 aux = aux->prox;
+                i++;
             }
             putchar('\n');
             p = p->prox;
@@ -211,22 +334,43 @@ void listarLinhas(plinha p){
     }while( ch != '\n');
 }
 
-void listarLinhasParagem(plinha p){
+void listarLinhasParagem(plinha p, pparagem pp, int n){
     pparagem aux;
     char nomeParagem[100], ch;
+    int existe = 0;
+
+    fflush(stdin);
+    system("cls");
+
+    printf("\n\t\t\t\t\t  --------------------------------------------\n");
+    printf("\n\t\t\t\t\t  |    LISTA DA LINHA QUE PASSA NA PARAGEM   |\n");
+    printf("\n\t\t\t\t\t  --------------------------------------------\n");
 
     printf("Listar linhas com a paragem: ");
     scanf(" %99[^\n]", nomeParagem);
+    fflush(stdin);
+
+    for(int i = 0; i < n; i++){
+        if(strcmp(nomeParagem, pp[i].nome) == 0){
+            existe = 1;
+            break;
+        }
+    }
+
+    if(existe == 0){
+        printf("Paragem NAO registada no sistema!\n");
+        return;
+    }
 
     while(p != NULL){
+        aux = p->lista;
         while(aux != NULL){
             if(strcmp(aux->nome, nomeParagem) == 0){
                 printf("-> LINHA '%s'\n", p->nome);
-                aux = p->lista;
+                //aux = p->lista;
+                break;
             }
-            else{
-                aux = aux->prox;
-            }
+            aux = aux->prox;
         }
         p = p->prox;
     }

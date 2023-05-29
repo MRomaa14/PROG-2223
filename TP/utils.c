@@ -30,6 +30,6 @@ int lerFich(char *nomeF){
     return 0;
 }
 
-
+//void guardaBin(client)
 
 

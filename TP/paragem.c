@@ -46,7 +46,7 @@ paragem obtemInfo(paragem *tab, int n){
 }
 
 
-pparagem regParagem(paragem *tab, int *n){
+pparagem regParagem(pparagem tab, int *n){
     char ch;
 
     do{
@@ -72,7 +72,7 @@ pparagem regParagem(paragem *tab, int *n){
     return tab;
 }
 
-pparagem elimParagem(paragem* tab, int *n){
+pparagem elimParagem(pparagem tab, int *n){
     paragem t, *aux;
     int i;
     char ch;
@@ -171,4 +171,42 @@ void listaParagens(paragem *tab, int n){
         ch = getchar();
         fflush(stdin);
     }while( ch != '\n');
+}
+
+void guardaParagens(paragem *p, int total){
+    FILE *f;
+
+    f = fopen("paragens.dat", "wb");
+    if(f == NULL){
+        printf("ERRO ao guardar o ficheiro\n");
+        return;
+    }
+
+    fwrite(&total, sizeof(int), 1, f);
+    fwrite(p, sizeof(paragem), total, f);
+    fclose(f);
+}
+
+pparagem leParagens(int *total){
+    FILE *f;
+    pparagem aux = NULL;
+
+    *total = 0;
+    f = fopen("paragens.dat", "rb");
+    if(f == NULL){
+        printf("ERRO na leitura do ficheiro\n");
+        return NULL;
+    }
+    fread(total, sizeof(int), 1, f);
+
+    aux = malloc(sizeof(paragem) * (*total));
+    if(aux == NULL){
+        fclose(f);
+        *total = 0;
+        return NULL;
+    }
+    fread(aux, sizeof(paragem), *total, f);
+
+    fclose(f);
+    return aux;
 }
