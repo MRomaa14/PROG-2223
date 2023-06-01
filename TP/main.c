@@ -1,19 +1,21 @@
 // Miguel Umbelino da Mota Roma - a2021138955
 
+#include "menus.h"
+#include "ficheiros.h"
 #include "paragem.h"
 #include "linha.h"
-#include "menus.h"
+#include "utils.h"
 
 int main(){
-    paragem *sistema = NULL; //adicionar paragens no array dinamico
-    linha *linhas = NULL; //adicionar linhas na lista ligada
+    pparagem sistema = NULL; //adicionar paragens no array dinamico
+    plinha linhas = NULL; //adicionar linhas na lista ligada
     FILE* dados; //adicionar linha pelo ficheiro de texto
 
     int total = 0;
     int opt_inic, opt_perc, opt_lin, opt_parag;
 
-    //sistema = inicParagem();
-    sistema = leParagens(&total);
+    sistema = recuperaParagens(&total);
+    linhas = recuperaLinhas();
 
     do{
         opt_inic = menuInicial();
@@ -27,8 +29,6 @@ int main(){
                             break;
                         case 2:
                             //linhamultipla();
-                            break;
-                        case 3:
                             break;
                         default:
                             printf("Opcao invalida!\n");
@@ -47,18 +47,18 @@ int main(){
                             addParagemLinha(linhas, sistema, total);
                             break;
                         case 3:
-                            listarLinhas(linhas);
+                            elimParagemLinha(linhas, sistema, total);
                             break;
                         case 4:
-                            listarLinhasParagem(linhas, sistema, total);
+                            listarLinhas(linhas);
                             break;
                         case 5:
+                            listarLinhasParagem(linhas);
                             break;
                         default:
-                            printf("Opcao invalida!\n");
                             break;
                     }
-                }while(opt_lin != 5);
+                }while(opt_lin != 6);
                 break;
             case 3:
                 do{
@@ -73,8 +73,6 @@ int main(){
                         case 3:
                             listaParagens(sistema, total);
                             break;
-                        case 4:
-                            break;
                         default:
                             printf("Nenhuma opcao valida inserida!\n");
                             break;
@@ -83,6 +81,7 @@ int main(){
                 break;
             case 4:
                 guardaParagens(sistema, total);
+                guardaLinhas(linhas);
                 break;
             default:
                 printf("Opcao invalida!\n");

@@ -11,7 +11,6 @@ pparagem inicParagem(){
         free(aux);
         return NULL;
     }
-
     return aux;
 }
 
@@ -26,12 +25,11 @@ paragem obtemInfo(paragem *tab, int n){
     do{
         existe = 0;
         printf("Nome da paragem:");
-        fgets(t.nome, sizeof(t.nome), stdin);
-        t.nome[strcspn(t.nome, "\n")] = '\0';
+        scanf(" %99[^\n]", t.nome);
 
         for(i = 0; i < n; i++){
             if(strcmp(t.nome, tab[i].nome) == 0){
-                printf("Uma paragem com esse nome ja se encontra no sistema!\n\n");
+                printf("[AVISO] Paragem JA se encontra no sistema!\n\n");
                 existe = 1;
             }
         }
@@ -85,26 +83,40 @@ pparagem elimParagem(pparagem tab, int *n){
         printf("\n\t\t\t\t\t  |             ELIMINAR PARAGEM             |\n");
         printf("\n\t\t\t\t\t  --------------------------------------------\n");
 
+        if(*n == 0){
+            printf("-> Nenhuma paragem no sistema, ENTER para voltar");
+            do{
+                fflush(stdin);
+                ch = getchar();
+            }while(ch != '\n');
+            break;
+        }
+
         char cod[5];
         printf("Codigo da paragem a eliminar:");
-        fgets(cod, sizeof(cod), stdin);
-        cod[strcspn(cod, "\n")] = '\0';
+        scanf(" %4[^\n]", cod);
 
         for(i = 0; i < *n && (strcmp(tab[i].codigo,cod) != 0); i++);
 
-        if(tab[i].numLinhas == 0){
-            if(i == *n){    //Chegou ao fim e nao encontrou nenhuma paragem com esse nome
-                printf("Nao existe nenhuma paragem registada com o codigo!\n");
-            }
-            else if(*n == 1){   //So existe 1 paragem no sistema pelo que podemos dar free
-                printf("Paragem [ %s ] eliminada com sucesso!\n", tab[i].nome);
+        if(i == *n){    //Chegou ao fim e nao encontrou nenhuma paragem com esse nome
+            printf("[AVISO] Nenhuma paragem com o codigo [ %s ]!\n", cod);
+        }
+        else if(tab[i].numLinhas == 0){
+            if(*n == 1){   //So existe 1 paragem no sistema pelo que podemos dar free
+                printf("[AVISO] Paragem [ %s ] eliminada com sucesso!\n", tab[i].nome);
 
                 free(tab);
                 *n = 0;
+
+                printf("\n-> Nenhuma paragem no sistema, ENTER para voltar");
+                do{
+                    fflush(stdin);
+                    ch = getchar();
+                }while(ch != '\n');
                 return NULL;
             }
             else{   //Se houver mais que 1 paragem no sistema
-                printf("Paragem [ %s ] eliminada com sucesso!\n", tab[i].nome);
+                printf("\nParagem [ %s ] eliminada com sucesso!\n", tab[i].nome);
 
                 t = tab[i];
                 tab[i] = tab[*n-1];
@@ -120,15 +132,12 @@ pparagem elimParagem(pparagem tab, int *n){
                 }
             }
         }
-        else if(i == *n){
-            printf("Nenhuma paragem encontrada com o codigo [%s]!\n", cod);
-        }
         else if(tab[i].numLinhas != 0){
             printf("Esta paragem pertence a %d linhas\n", tab[i].numLinhas);
             printf("Nao pode ser eliminada!!\n");
         }
 
-        printf("-> Eliminar outra paragem? (S/N)");
+        printf("\n-> Eliminar outra paragem? (S/N)");
         do {
             ch = getchar();
             fflush(stdin);
@@ -173,40 +182,3 @@ void listaParagens(paragem *tab, int n){
     }while( ch != '\n');
 }
 
-void guardaParagens(paragem *p, int total){
-    FILE *f;
-
-    f = fopen("paragens.dat", "wb");
-    if(f == NULL){
-        printf("ERRO ao guardar o ficheiro\n");
-        return;
-    }
-
-    fwrite(&total, sizeof(int), 1, f);
-    fwrite(p, sizeof(paragem), total, f);
-    fclose(f);
-}
-
-pparagem leParagens(int *total){
-    FILE *f;
-    pparagem aux = NULL;
-
-    *total = 0;
-    f = fopen("paragens.dat", "rb");
-    if(f == NULL){
-        printf("ERRO na leitura do ficheiro\n");
-        return NULL;
-    }
-    fread(total, sizeof(int), 1, f);
-
-    aux = malloc(sizeof(paragem) * (*total));
-    if(aux == NULL){
-        fclose(f);
-        *total = 0;
-        return NULL;
-    }
-    fread(aux, sizeof(paragem), *total, f);
-
-    fclose(f);
-    return aux;
-}

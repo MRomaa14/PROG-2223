@@ -60,10 +60,11 @@ int menuLinhas(){
     printf("\t\t\t\t    |             Miguel Roma - TP             |\n");
     printf("\t\t\t\t    --------------------------------------------\n");
     printf("\t\t\t\t    |       [   1 - Adicionar linha    ]       |\n");
-    printf("\t\t\t\t    |       [   2 - Eliminar linha     ]       |\n");
-    printf("\t\t\t\t    |       [   3 - Visualizar linhas  ]       |\n");
-    printf("\t\t\t\t    |       [   4 - Linhas com paragem ]       |\n");
-    printf("\t\t\t\t    |       [   5 - Voltar             ]       |\n");
+    printf("\t\t\t\t    |       [   2 - Adicionar paragem  ]       |\n");
+    printf("\t\t\t\t    |       [   3 - Eliminar paragem   ]       |\n");
+    printf("\t\t\t\t    |       [   4 - Visualizar linhas  ]       |\n");
+    printf("\t\t\t\t    |       [   5 - Linhas com paragem ]       |\n");
+    printf("\t\t\t\t    |       [   6 - Voltar             ]       |\n");
     printf("\t\t\t\t    --------------------------------------------\n");
 
     putchar('\n');

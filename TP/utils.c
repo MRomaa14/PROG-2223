@@ -3,8 +3,8 @@
 #include "utils.h"
 
 void gerarCodigo(char* cod){
-    const char caracteres[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const int n_caracteres = sizeof(caracteres) - 1; // -1 para desconsiderar o caractere nulo
+    char caracteres[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    int n_caracteres = sizeof(caracteres) - 1;
     srand(time(NULL));
 
     for(int i = 0; i < 4; i++){
@@ -29,7 +29,5 @@ int lerFich(char *nomeF){
     fclose(fp);
     return 0;
 }
-
-//void guardaBin(client)
 
 
