@@ -20,9 +20,9 @@ pparagem procuraParagem(pparagem pp, int n, char *nomeParagem);
 
 plinha regLinha(plinha p, pparagem parag, int n);
 
-void addParagemLinha(plinha p, pparagem b, int n);
+void adicParagemLinha(plinha p, pparagem pp, int n);
 
-void elimParagemLinha(plinha p, pparagem pp, int n);
+plinha elimParagemLinha(plinha p, pparagem pp, int n);
 
 void listarLinhas(plinha p);
 

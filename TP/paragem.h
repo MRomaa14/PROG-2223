@@ -10,6 +10,7 @@ struct paragem{
     char codigo[5];
     int numLinhas;
 
+    pparagem ant;
     pparagem prox;
 };
 

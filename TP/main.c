@@ -4,6 +4,7 @@
 #include "ficheiros.h"
 #include "paragem.h"
 #include "linha.h"
+#include "percurso.h"
 #include "utils.h"
 
 int main(){
@@ -25,7 +26,7 @@ int main(){
                     opt_perc = menuPercurso();
                     switch (opt_perc) {
                         case 1:
-                            //criarLinha(linhas);
+                            percursoLinhaUnica(linhas);
                             break;
                         case 2:
                             //linhamultipla();
@@ -44,10 +45,10 @@ int main(){
                             linhas = regLinha(linhas, sistema, total);
                             break;
                         case 2:
-                            addParagemLinha(linhas, sistema, total);
+                            adicParagemLinha(linhas, sistema, total);
                             break;
                         case 3:
-                            elimParagemLinha(linhas, sistema, total);
+                            linhas = elimParagemLinha(linhas, sistema, total);
                             break;
                         case 4:
                             listarLinhas(linhas);
