@@ -93,7 +93,6 @@ plinha recuperaLinhas() {
         while (nPara > 0) {
             pparagem novaParagem = malloc(sizeof(paragem));
             if (novaParagem == NULL) {
-                // Libera a memória alocada até o momento
                 free(p);
                 fclose(f);
                 return NULL;
@@ -133,29 +132,130 @@ plinha recuperaLinhas() {
     return p;
 }
 
-void leFicheiro(){
+int verificaLinhaExiste(plinha p, char* nomeLinha) {
+    plinha lin = p;
+    while (lin != NULL) {
+        if (strcmp(lin->nome, nomeLinha) == 0) {
+            return 1;
+        }
+        lin = lin->prox;
+    }
+    return 0;
+}
+
+int verificaParagemExiste(plinha p, pparagem pp, int n, char* nomeParagem, char* codigo) {
+    pparagem aux = pp;
+    plinha temp = p;
+
+    for(int i = 0; i < n; i++){
+        if (strcmp(aux->nome, nomeParagem) == 0 || strcmp(aux->codigo, codigo) == 0)
+            return 1;
+    }
+
+    while (temp != NULL) {
+        pparagem verf = temp->lista;
+        while (verf != NULL) {
+            if (strcmp(verf->nome, nomeParagem) == 0) {
+                return 1;
+            }
+            verf = verf->prox;
+        }
+        temp = temp->prox;
+    }
+
+    return 0;
+}
+
+plinha lerFicheiroTxt(plinha p, pparagem* pp, int *n){
     FILE *f;
 
+    char nomeLinha[100], nomeParagem[100];
+    char cod[5];
+
     f = fopen("linha1.txt", "r");
-    if(f == NULL){
-        printf("[ERRO] Nao foi possivel abrir o ficheiro.\n");
-        return;
+    if (f == NULL) {
+        printf("[AVISO] Erro ao abrir o ficheiro!\n");
+        return p;
+    }
+
+    fscanf(f, " %99[^\n]", nomeLinha);
+    if(verificaLinhaExiste(p, nomeLinha) == 1){
+        printf("[AVISO] Linha [%s] já existe no sistema!\n", nomeLinha);
+        printf("Informação do ficheiro não será adicionada\n");
+        fclose(f);
+        return p;
     }
 
     plinha nova = malloc(sizeof(linha));
     if (nova == NULL) {
-        printf("[ERRO] Falha na alocacao de memoria.\n");
-        return;
+        printf("[AVISO] Erro ao alocar memória para a nova linha!\n");
+        fclose(f);
+        return p;
     }
-    nova->prox = NULL;
-    //nova->ant = NULL;
-
-    char nomeLinha[100];
-    fgets(nomeLinha, sizeof(nomeLinha), f);
-    //nomeLinha[strcspn(nomeLinha, "\n")] = '\0';
 
     strcpy(nova->nome, nomeLinha);
     nova->nParag = 0;
     nova->lista = NULL;
+    nova->prox = NULL;
 
+    pparagem aux = NULL;
+    while (fscanf(f, " %99[^#] #%4s", nomeParagem, cod) == 2) {
+        nomeParagem[strlen(nomeParagem) - 1] = '\0';
+
+        if (verificaParagemExiste(p, *pp, *n, nomeParagem, cod) == 1) {
+            printf("[AVISO] Paragem [%s] já existe no sistema!\n", nomeParagem);
+            printf("Informação do ficheiro não será adicionada.\n");
+            fclose(f);
+            free(nova);
+            return p;
+        }
+
+        pparagem pnova = malloc(sizeof(paragem));
+        if(pnova == NULL){
+            printf("[AVISO] Erro ao alocar memória para a nova paragem!\n");
+            fclose(f);
+            free(pnova);
+            return p;
+        }
+
+        strcpy(pnova->nome, nomeParagem);
+        strcpy(pnova->codigo, cod);
+        pnova->numLinhas = 1;
+        pnova->ant = NULL;
+        pnova->prox = NULL;
+
+        if(aux == NULL){
+            nova->lista = pnova;
+        }
+        else{
+            aux->prox = pnova;
+            pnova->ant = aux;
+        }
+
+        nova->nParag++;
+        aux = pnova;
+
+        (*n)++;
+        *pp = realloc(*pp, sizeof(paragem) * (*n));
+        if (*pp == NULL) {
+            printf("[AVISO] Erro ao realocar memória para o array de paragens!\n");
+            fclose(f);
+            return p;
+        }
+
+        (*pp)[(*n) - 1] = *pnova;
+    }
+
+    fclose(f);
+
+    if (p == NULL) {
+        return nova;
+    } else {
+        plinha linhaAtual = p;
+        while (linhaAtual->prox != NULL) {
+            linhaAtual = linhaAtual->prox;
+        }
+        linhaAtual->prox = nova;
+        return p;
+    }
 }

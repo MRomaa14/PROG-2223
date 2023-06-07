@@ -2,7 +2,6 @@
 
 #include "menus.h"
 
-
 int menuInicial(){
     int opt;
 
@@ -15,7 +14,8 @@ int menuInicial(){
     printf("\t\t\t\t    |       [  1 - Iniciar percurso    ]       |\n");
     printf("\t\t\t\t    |       [  2 - Gestao das linhas   ]       |\n");
     printf("\t\t\t\t    |       [  3 - Gestao das paragens ]       |\n");
-    printf("\t\t\t\t    |       [  4 - Guardar e sair      ]       |\n");
+    printf("\t\t\t\t    |       [  4 - Ler ficheiro texto  ]       |\n");
+    printf("\t\t\t\t    |       [  5 - Guardar e sair      ]       |\n");
     printf("\t\t\t\t    --------------------------------------------\n");
 
     putchar('\n');

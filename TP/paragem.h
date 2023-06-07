@@ -14,8 +14,6 @@ struct paragem{
     pparagem prox;
 };
 
-pparagem inicParagem();
-
 paragem obtemInfo(paragem *tab, int n);
 
 pparagem regParagem(paragem *tab, int *n);

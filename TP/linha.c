@@ -345,7 +345,7 @@ plinha elimParagemLinha(plinha p, pparagem pp, int n) {
             }
         }
 
-        printf("-> Eliminar outra paragem (S/N)?");
+        printf("\n-> Eliminar outra paragem (S/N)?");
         do {
             fflush(stdin);
             ch = getchar();

@@ -2,18 +2,6 @@
 
 #include "paragem.h"
 
-pparagem inicParagem(){
-    paragem* aux = NULL;
-
-    aux = malloc(sizeof(paragem));
-    if(aux == NULL){
-        printf("ERRO na alocacao de memoria da paragem");
-        free(aux);
-        return NULL;
-    }
-    return aux;
-}
-
 paragem obtemInfo(paragem *tab, int n){
     paragem t;
     int existe, i;
@@ -42,7 +30,6 @@ paragem obtemInfo(paragem *tab, int n){
 
     return t;
 }
-
 
 pparagem regParagem(pparagem tab, int *n){
     char ch;

@@ -13,7 +13,6 @@ void gerarCodigo(char* cod){
     cod[4] = '\0';
 }
 
-
 int lerFich(char *nomeF){
     FILE *fp = fopen(nomeF,"r");
     if(fp == NULL) {
@@ -29,5 +28,6 @@ int lerFich(char *nomeF){
     fclose(fp);
     return 0;
 }
+
 
 

@@ -2,15 +2,15 @@
 
 #include "menus.h"
 #include "ficheiros.h"
+#include "percurso.h"
+
 #include "paragem.h"
 #include "linha.h"
-#include "percurso.h"
 #include "utils.h"
 
 int main(){
     pparagem sistema = NULL; //adicionar paragens no array dinamico
     plinha linhas = NULL; //adicionar linhas na lista ligada
-    FILE* dados; //adicionar linha pelo ficheiro de texto
 
     int total = 0;
     int opt_inic, opt_perc, opt_lin, opt_parag;
@@ -81,6 +81,9 @@ int main(){
                 }while(opt_parag != 4);
                 break;
             case 4:
+                linhas = lerFicheiroTxt(linhas, &sistema, &total);
+                break;
+            case 5:
                 guardaParagens(sistema, total);
                 guardaLinhas(linhas);
                 break;
@@ -88,7 +91,7 @@ int main(){
                 printf("Opcao invalida!\n");
                 break;
         }
-    }while(opt_inic != 4);
+    }while(opt_inic != 5);
 
     free(sistema);
     free(linhas);
