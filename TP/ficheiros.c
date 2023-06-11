@@ -170,12 +170,13 @@ int verificaParagemExiste(plinha p, pparagem pp, int n, char* nomeParagem, char*
 }
 
 //LER A NOVA LINHA E AS SUAS PARAGENS DE UM FICHEIRO DE TEXTO
-plinha lerFicheiroTxt(plinha p, pparagem* pp, int *n){
-    FILE *f;
+plinha lerFicheiroTxt(plinha p, pparagem* pp, int* n) {
+    FILE* f;
 
     char nomeFich[100], ch;
-    char nomeLinha[100], nomeParagem[100];
-    char cod[5];
+    char nomeLinha[100], nomeParagem[100], cod[5];
+
+    int adicionadas = 0;
 
     fflush(stdin);
     system("cls");
@@ -187,37 +188,37 @@ plinha lerFicheiroTxt(plinha p, pparagem* pp, int *n){
     printf("-> Ficheiro de texto: ");
     scanf(" %99[^\n]", nomeFich);
 
-    //Abertura do ficheiro de texto
+    // Abertura do ficheiro de texto
     f = fopen(nomeFich, "r");
     if (f == NULL) {
         printf("[AVISO] Erro ao abrir o ficheiro!\n");
 
         printf("\n-> ENTER para voltar ao menu anterior");
-        do{
+        do {
             fflush(stdin);
             ch = getchar();
-        }while( ch != '\n');
+        } while (ch != '\n');
 
         return p;
     }
 
-    //Leitura da primeira linha do ficheiro (nome da linha)
+    // Leitura da primeira linha do ficheiro (nome da linha) até o '\n'
     fscanf(f, " %99[^\n]", nomeLinha);
-    if(verificaLinhaExiste(p, nomeLinha) == 1){
+    if (verificaLinhaExiste(p, nomeLinha) == 1) {
         printf("[AVISO] Linha [%s] ja existe no sistema!\n", nomeLinha);
         printf("Informacao do ficheiro nao sera adicionada\n");
         fclose(f);
 
         printf("\n-> ENTER para voltar ao menu anterior");
-        do{
+        do {
             fflush(stdin);
             ch = getchar();
-        }while( ch != '\n');
+        } while (ch != '\n');
 
         return p;
     }
 
-    //Alocar espaço para guardar a linha
+    // Alocar espaço para guardar a linha
     plinha nova = malloc(sizeof(linha));
     if (nova == NULL) {
         printf("[AVISO] Erro ao alocar memória para a nova linha!\n");
@@ -225,78 +226,115 @@ plinha lerFicheiroTxt(plinha p, pparagem* pp, int *n){
         return p;
     }
 
+    // Informação da nova linha
     strcpy(nova->nome, nomeLinha);
     nova->nParag = 0;
     nova->lista = NULL;
     nova->prox = NULL;
 
-    pparagem aux = NULL;
-    while (fscanf(f, " %99[^#] #%4s", nomeParagem, cod) == 2) {
-        nomeParagem[strlen(nomeParagem) - 1] = '\0';
+    while (fscanf(f, " %99[^#] #%4s", nomeParagem, cod) == 2) { // Le a informação das paragens
+        nomeParagem[strlen(nomeParagem) - 1] = '\0'; //Remove o espaço em branco que fica entre o nome da paragem e o '#'
 
-        //Verifica se a paragem lida já estava registada
+        // Verifica se a paragem lida já estava registada
         if (verificaParagemExiste(p, *pp, *n, nomeParagem, cod) == 1) {
             printf("[AVISO] Paragem [%s] ja existe no sistema!\n", nomeParagem);
             printf("Informacao do ficheiro nao sera adicionada\n");
 
             fclose(f);
-            free(nova);
+            free(nova); //Liberta a memória alocada para a nova linha
+
             printf("\n-> ENTER para voltar ao menu anterior");
-            do{
+            do {
                 fflush(stdin);
                 ch = getchar();
-            }while( ch != '\n');
+            } while (ch != '\n');
 
             return p;
         }
 
+        // Alocar espaço para a nova paragem
         pparagem pnova = malloc(sizeof(paragem));
-        if(pnova == NULL){
+        if (pnova == NULL) {
             printf("[AVISO] Erro ao alocar memória para a nova paragem!\n");
             fclose(f);
-            free(pnova);
+            free(nova);
+
             return p;
         }
 
+        // Informação da nova paragem a adicionar
         strcpy(pnova->nome, nomeParagem);
         strcpy(pnova->codigo, cod);
         pnova->numLinhas = 1;
         pnova->ant = NULL;
         pnova->prox = NULL;
 
-        if(aux == NULL){
+        // Adicionar a nova paragem à lista da linha
+        pparagem temp = nova->lista;
+        if (temp == NULL) { //Se for a primeira paragem
             nova->lista = pnova;
         }
-        else{
-            aux->prox = pnova;
-            pnova->ant = aux;
+        else {    //Se ja houver alguma paragem na linha
+            while (temp->prox != NULL) {    //Percorre a lista das paragens ate encontrar o ultimo nó
+                temp = temp->prox;
+            }
+            temp->prox = pnova;
+            pnova->ant = temp;
         }
 
+        adicionadas++;
         nova->nParag++;
-        aux = pnova;
-
-        (*n)++;
-        *pp = realloc(*pp, sizeof(paragem) * (*n));
-        if (*pp == NULL) {
-            printf("[AVISO] Erro ao realocar memória para o array de paragens!\n");
-            fclose(f);
-            return p;
-        }
-
-        (*pp)[(*n) - 1] = *pnova;
     }
 
     fclose(f);
 
-    if (p == NULL) {
-        return nova;
-    } else {
-        plinha linhaAtual = p;
-        while (linhaAtual->prox != NULL) {
-            linhaAtual = linhaAtual->prox;
-        }
-        linhaAtual->prox = nova;
+    // Verifica se há paragens para serem adicionadas ao array dinamico (pparagem pp)
+    if (adicionadas > 0) {
+        if (nova->lista != NULL) {  // A lista das paragens da nova linha está preenchida com paragens
+            pparagem temp = nova->lista;
+            while (temp != NULL) {  //É percorrida a lista
+                if (verificaParagemExiste(p, *pp, *n, temp->nome, temp->codigo) == 0) {
+                    (*n)++;
+                    *pp = realloc(*pp, sizeof(paragem) * (*n));
+                    if (*pp == NULL) {
+                        printf("[AVISO] Erro ao realocar memória para o array de paragens!\n");
+                        return p;
+                    }
 
-        return p;
+                    (*pp)[(*n) - 1] = *temp; // Paragem adicionada ao final do array dinâmico
+                }
+
+                temp = temp->prox;
+            }
+        }
+
+        // Adiciona a nova linha à lista
+        if (p == NULL) {    //Se a lista estiver vazia
+            printf("[AVISO] Nova linha e paragens adicionadas do ficheiro de texto!\n");
+            printf("\n-> ENTER para voltar ao menu anterior");
+            do{
+                fflush(stdin);
+                ch = getchar();
+            }while( ch != '\n');
+
+            return nova;
+        } else {    //Se já houver alguma linha na lista
+            plinha temp = p;
+            while (temp->prox != NULL) {
+                temp = temp->prox;
+            }
+            temp->prox = nova;
+        }
+    } else {
+        free(nova); //Não são adicionadas as paragens e liberta a memória alocada para a nova linha
     }
+
+    printf("[AVISO] Nova linha e paragens adicionadas do ficheiro de texto!\n");
+    printf("\n-> ENTER para voltar ao menu anterior");
+    do{
+        fflush(stdin);
+        ch = getchar();
+    }while( ch != '\n');
+
+    return p;
 }

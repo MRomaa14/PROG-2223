@@ -29,8 +29,7 @@ int main(){
                             percursoLinhaUnica(linhas);
                             break;
                         case 2:
-                            percursoLinhaTroca(linhas);
-                            //percursoLinhaTroca();
+                            //percursoLinhaTroca(linhas);
                             break;
                         default:
                             break;

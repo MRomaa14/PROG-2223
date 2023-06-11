@@ -2,6 +2,7 @@
 
 #include "percurso.h"
 
+// PROCURA UM PERCURSO VÁLIDO UMA LINHA DE CADA VEZ
 void percursoLinhaUnica(plinha p) {
     plinha paux = p;
     char nomePartida[100], nomeChegada[100], ch;
@@ -22,15 +23,17 @@ void percursoLinhaUnica(plinha p) {
     fflush(stdin);
     scanf(" %99[^\n]", nomeChegada);
 
+    //Percorre todas as linhas da lista ligada
     while(paux != NULL){
         encontrado = 0;
         pparagem partida = paux->lista;
 
+        //Percorre todas as paragens da lista da linha à procura do percurso (ponteiro prox)
         while(partida != NULL){
-            if(strcmp(nomePartida, partida->nome) == 0){
+            if(strcmp(nomePartida, partida->nome) == 0){  //Até encontrar a paragem de partida
                 pparagem chegada = partida->prox;
 
-                while(chegada != NULL){
+                while(chegada != NULL){ //Verifica se essa mesma linha tem a paragem de chegada
                     if(strcmp(nomeChegada, chegada->nome) == 0){
                         encontrado = 1;
                         perc = 1;
@@ -38,6 +41,7 @@ void percursoLinhaUnica(plinha p) {
                         printf("\nPercurso na linha '%s':\n", paux->nome);
                         printf("%s -> ", nomePartida);
 
+                        // Imprime as paragens que estão entre a partida e a chegada
                         pparagem percurso = partida->prox;
                         while(percurso != chegada){
                             printf("%s -> ", percurso->nome);
@@ -45,7 +49,7 @@ void percursoLinhaUnica(plinha p) {
                         }
                         printf("%s\n", nomeChegada);
                     }
-                    if(encontrado == 1)
+                    if(encontrado == 1) //Não é necessário procurar mais nessa linha
                         break;
 
                     chegada = chegada->prox;
@@ -57,13 +61,16 @@ void percursoLinhaUnica(plinha p) {
             partida = partida->prox;
         }
 
+        // Caso não seja encontrada, procura o percurso no sentido inverso (ponteiro ant)
         if (encontrado == 0) {
             partida = paux->lista;
 
+            // Percorre as linhas da lista ligada
             while (partida != NULL) {
                 if (strcmp(nomePartida, partida->nome) == 0) {
                     pparagem chegada = partida->ant;
 
+                    // Percorre a lista das paragens na linha
                     while (chegada != NULL) {
                         if (strcmp(nomeChegada, chegada->nome) == 0) {
                             encontrado = 1;
@@ -72,6 +79,7 @@ void percursoLinhaUnica(plinha p) {
                             printf("\nPercurso na linha '%s':\n", paux->nome);
                             printf("%s -> ", nomePartida);
 
+                            // Apresenta o percurso no sentido inverso
                             pparagem percurso = partida->ant;
                             while (percurso != chegada) {
                                 printf("%s -> ", percurso->nome);
@@ -94,6 +102,7 @@ void percursoLinhaUnica(plinha p) {
         paux = paux->prox;
     }
 
+    // Se não for encontrado nenhum percurso
     if (perc == 0) {
         printf("[AVISO] NENHUM percurso encontrado entre '%s' e '%s'\n", nomePartida, nomeChegada);
     }
@@ -105,69 +114,7 @@ void percursoLinhaUnica(plinha p) {
     } while (ch != '\n');
 }
 
-void percursoLinhaTroca(plinha p) {
-    char nomePartida[100], nomeChegada[100], ch;
-
-    fflush(stdin);
-    system("cls");
-
-    printf("\n\t\t\t\t\t  --------------------------------------------\n");
-    printf("\n\t\t\t\t\t  |       LISTAR PERCURSO DE VARIAS LINHAS   |\n");
-    printf("\n\t\t\t\t\t  --------------------------------------------\n");
-
-    printf("-> Paragem de partida: ");
-    fflush(stdin);
-    scanf(" %99[^\n]", nomePartida);
-
-    printf("-> Paragem de chegada: ");
-    fflush(stdin);
-    scanf(" %99[^\n]", nomeChegada);
-
-    plinha linhaAtual = p;
-
-    while (linhaAtual != NULL) {
-        pparagem paragemPartida = linhaAtual->lista;
-
-        while (paragemPartida != NULL) {
-            if (strcmp(paragemPartida->nome, nomePartida) == 0) {
-                plinha linhaSeguinte = linhaAtual->prox;
-
-                while (linhaSeguinte != NULL) {
-                    pparagem paragemTransbordo = linhaSeguinte->lista;
-
-                    while (paragemTransbordo != NULL) {
-                        if (strcmp(paragemTransbordo->nome, nomeChegada) == 0) {
-                            printf("Percurso encontrado com transbordo: %s -> %s -> %s\n", nomePartida, paragemPartida->nome, nomeChegada);
-                        }
-
-                        paragemTransbordo = paragemTransbordo->prox;
-                    }
-
-                    linhaSeguinte = linhaSeguinte->prox;
-                }
-            }
-
-            if (strcmp(paragemPartida->nome, nomeChegada) == 0) {
-                printf("Percurso encontrado: %s -> %s\n", nomePartida, nomeChegada);
-            }
-
-            paragemPartida = paragemPartida->prox;
-        }
-
-        linhaAtual = linhaAtual->prox;
-    }
-
-    printf("O percurso entre '%s' e '%s' nao existe com, no maximo, um transbordo.\n", nomePartida, nomeChegada);
-
-    printf("\n-> ENTER para voltar ao menu anterior");
-    do {
-        fflush(stdin);
-        ch = getchar();
-    } while (ch != '\n');
-
-}
-
 /*
-void percursoLinhaTroca(){
+void percursoLinhaTroca(plinha p) {
 }
  */

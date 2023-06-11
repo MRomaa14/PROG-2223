@@ -10,8 +10,8 @@ struct linha{
     char nome[100];
     int nParag;
 
-    pparagem lista;
-    plinha prox;
+    pparagem lista; //Ponteiro para a lista duplamente ligada das paragens
+    plinha prox;  //Ponteiro para a lista ligada das linhas
 };
 
 int contaNos(plinha p);

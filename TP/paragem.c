@@ -88,12 +88,12 @@ pparagem elimParagem(pparagem tab, int *n){
         }
 
         char cod[5];
-        printf("Codigo da paragem a eliminar:");
+        printf("-> Codigo da paragem a eliminar:");
         scanf(" %4[^\n]", cod);
 
-        for(i = 0; i < *n && (strcmp(tab[i].codigo,cod) != 0); i++);    //Procura a paragem com o codigo
+        for(i = 0; i < *n && (strcmp(tab[i].codigo,cod) != 0); i++);  //Procura a paragem com o codigo
 
-        if(i == *n){    //Chegou ao fim e nao encontrou nenhuma paragem com esse nome
+        if(i == *n){  //Chegou ao fim e não encontrou nenhuma paragem com esse nome
             printf("[AVISO] Nenhuma paragem com o codigo [ %s ]!\n", cod);
         }
         else if(tab[i].numLinhas == 0){ //Pode ser eliminada porque não pertence a nenhuma linha
@@ -127,7 +127,7 @@ pparagem elimParagem(pparagem tab, int *n){
             }
         }
         else if(tab[i].numLinhas != 0){ //Não pode ser eliminada porque pertence a alguma linha
-            printf("Esta paragem pertence a %d linhas\n", tab[i].numLinhas);
+            printf("Paragem [ %s ] pertence a %d linhas\n", tab[i].nome, tab[i].numLinhas);
             printf("Nao pode ser eliminada!!\n");
         }
 
