@@ -6,4 +6,6 @@
 
 void percursoLinhaUnica(plinha p);
 
+void percursoLinhaTroca(plinha p);
+
 #endif //TP_P_PERCURSO_H

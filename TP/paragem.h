@@ -10,8 +10,8 @@ struct paragem{
     char codigo[5];
     int numLinhas;
 
-    pparagem ant;
-    pparagem prox;
+    pparagem ant;   //Ponteiro a usar na lista duplamente ligada (apontar para a paragem anterior)
+    pparagem prox;  //Ponteiro a usar na lista duplamente ligada (apontar para a próxima paragem)
 };
 
 paragem obtemInfo(paragem *tab, int n);

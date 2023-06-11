@@ -2,7 +2,7 @@
 
 #include "ficheiros.h"
 
-//TRATA DE GUARDAR AS PARAGENS NUM FICHEIRO BINARIO
+//GUARDAR AS PARAGENS NUM FICHEIRO BINARIO
 void guardaParagens(pparagem p, int total){
     FILE *f;
 
@@ -12,12 +12,12 @@ void guardaParagens(pparagem p, int total){
         return;
     }
 
-    fwrite(&total, sizeof(int), 1, f);
-    fwrite(p, sizeof(paragem), total, f);
+    fwrite(&total, sizeof(int), 1, f);  //Passamos o número de paragens registadas (total)
+    fwrite(p, sizeof(paragem), total, f);   //Guarda a informação da struct de cada paragem armazenada no array dinamico "sistema"
     fclose(f);
 }
 
-//TRATA DE RECUPERAR AS PARAGENS DE UM FICHEIRO BINARIO
+//RECUPERAR AS PARAGENS DE UM FICHEIRO BINARIO
 pparagem recuperaParagens(int *total){
     FILE *f;
     pparagem aux = NULL;
@@ -28,9 +28,9 @@ pparagem recuperaParagens(int *total){
         printf("ERRO na leitura do ficheiro\n");
         return NULL;
     }
-    fread(total, sizeof(int), 1, f);
+    fread(total, sizeof(int), 1, f);    //Primeiro vai ler o inteiro guardado no ficheiro binario
 
-    aux = malloc(sizeof(paragem) * (*total));
+    aux = malloc(sizeof(paragem) * (*total));   //Aloca espaço para o número de paragens lido acima
     if(aux == NULL){
         fclose(f);
         *total = 0;
@@ -42,8 +42,7 @@ pparagem recuperaParagens(int *total){
     return aux;
 }
 
-
-//TRATA DE GUARDAR AS LINHAS NUM FICHEIRO BINARIO
+//GUARDAR AS LINHAS NUM FICHEIRO BINARIO
 void guardaLinhas(plinha p){
     FILE *f;
     f = fopen("linhas.dat", "wb");
@@ -51,14 +50,12 @@ void guardaLinhas(plinha p){
         printf("ERRO na leitura do ficheiro das LINHAS\n");
         return;
     }
-    if(f==NULL)
-        return;
 
     while(p != NULL){
-        fwrite(p, sizeof(linha), 1, f);
+        fwrite(p, sizeof(linha), 1, f); //Primeiro escreve a linha
 
         while(p->lista != NULL){
-            fwrite(p->lista, sizeof (paragem), 1, f);
+            fwrite(p->lista, sizeof (paragem), 1, f); //Em segundo escreve cada paragem que compoe essa linha
             p->lista = p->lista->prox;
         }
 
@@ -67,7 +64,7 @@ void guardaLinhas(plinha p){
     fclose(f);
 }
 
-//TRATA DE RECUPERAR AS LINHAS DE UM FICHEIRO BINARIO
+//RECUPERAR AS LINHAS DE UM FICHEIRO BINARIO
 plinha recuperaLinhas() {
     plinha p = NULL;
 
@@ -78,6 +75,7 @@ plinha recuperaLinhas() {
         return NULL;
     }
 
+    //Ler a informação relativa à linha
     linha lin;
     while (fread(&lin, sizeof(linha), 1, f) == 1) {
         plinha novo = malloc(sizeof(linha));
@@ -85,10 +83,12 @@ plinha recuperaLinhas() {
             fclose(f);
             return p;
         }
+
         *novo = lin;
         novo->prox = NULL;
         novo->lista = NULL;
 
+        //Ler a informação relativa às paragens da linha
         int nPara = novo->nParag;
         while (nPara > 0) {
             pparagem novaParagem = malloc(sizeof(paragem));
@@ -97,11 +97,12 @@ plinha recuperaLinhas() {
                 fclose(f);
                 return NULL;
             }
+
             fread(novaParagem, sizeof(paragem), 1, f);
             novaParagem->prox = NULL;
             novaParagem->ant = NULL;
 
-            // Insere a paragem na lista de paragens da linha
+            //Insere a paragem na lista de paragens da linha
             if (novo->lista == NULL) {
                 novo->lista = novaParagem;
             } else {
@@ -116,7 +117,7 @@ plinha recuperaLinhas() {
             nPara--;
         }
 
-        // Insere a linha na lista de linhas
+        //Insere a linha na lista ligada
         if (p == NULL) {
             p = novo;
         } else {
@@ -147,11 +148,13 @@ int verificaParagemExiste(plinha p, pparagem pp, int n, char* nomeParagem, char*
     pparagem aux = pp;
     plinha temp = p;
 
+    //Percorre o array dinâmico das paragens (verificar se a paragem existe)
     for(int i = 0; i < n; i++){
-        if (strcmp(aux->nome, nomeParagem) == 0 || strcmp(aux->codigo, codigo) == 0)
+        if (strcmp(aux[i].nome, nomeParagem) == 0 || strcmp(aux[i].codigo, codigo) == 0)
             return 1;
     }
 
+    //Percorre a lista das paragens na linha (verificar repetição)
     while (temp != NULL) {
         pparagem verf = temp->lista;
         while (verf != NULL) {
@@ -166,26 +169,55 @@ int verificaParagemExiste(plinha p, pparagem pp, int n, char* nomeParagem, char*
     return 0;
 }
 
+//LER A NOVA LINHA E AS SUAS PARAGENS DE UM FICHEIRO DE TEXTO
 plinha lerFicheiroTxt(plinha p, pparagem* pp, int *n){
     FILE *f;
 
+    char nomeFich[100], ch;
     char nomeLinha[100], nomeParagem[100];
     char cod[5];
 
-    f = fopen("linha1.txt", "r");
+    fflush(stdin);
+    system("cls");
+
+    printf("\n\t\t\t\t\t  --------------------------------------------\n");
+    printf("\n\t\t\t\t\t  |      ADICIONAR LINHA DE UM FICHEIRO      |\n");
+    printf("\n\t\t\t\t\t  --------------------------------------------\n");
+
+    printf("-> Ficheiro de texto: ");
+    scanf(" %99[^\n]", nomeFich);
+
+    //Abertura do ficheiro de texto
+    f = fopen(nomeFich, "r");
     if (f == NULL) {
         printf("[AVISO] Erro ao abrir o ficheiro!\n");
+
+        printf("\n-> ENTER para voltar ao menu anterior");
+        do{
+            fflush(stdin);
+            ch = getchar();
+        }while( ch != '\n');
+
         return p;
     }
 
+    //Leitura da primeira linha do ficheiro (nome da linha)
     fscanf(f, " %99[^\n]", nomeLinha);
     if(verificaLinhaExiste(p, nomeLinha) == 1){
-        printf("[AVISO] Linha [%s] já existe no sistema!\n", nomeLinha);
-        printf("Informação do ficheiro não será adicionada\n");
+        printf("[AVISO] Linha [%s] ja existe no sistema!\n", nomeLinha);
+        printf("Informacao do ficheiro nao sera adicionada\n");
         fclose(f);
+
+        printf("\n-> ENTER para voltar ao menu anterior");
+        do{
+            fflush(stdin);
+            ch = getchar();
+        }while( ch != '\n');
+
         return p;
     }
 
+    //Alocar espaço para guardar a linha
     plinha nova = malloc(sizeof(linha));
     if (nova == NULL) {
         printf("[AVISO] Erro ao alocar memória para a nova linha!\n");
@@ -202,11 +234,19 @@ plinha lerFicheiroTxt(plinha p, pparagem* pp, int *n){
     while (fscanf(f, " %99[^#] #%4s", nomeParagem, cod) == 2) {
         nomeParagem[strlen(nomeParagem) - 1] = '\0';
 
+        //Verifica se a paragem lida já estava registada
         if (verificaParagemExiste(p, *pp, *n, nomeParagem, cod) == 1) {
-            printf("[AVISO] Paragem [%s] já existe no sistema!\n", nomeParagem);
-            printf("Informação do ficheiro não será adicionada.\n");
+            printf("[AVISO] Paragem [%s] ja existe no sistema!\n", nomeParagem);
+            printf("Informacao do ficheiro nao sera adicionada\n");
+
             fclose(f);
             free(nova);
+            printf("\n-> ENTER para voltar ao menu anterior");
+            do{
+                fflush(stdin);
+                ch = getchar();
+            }while( ch != '\n');
+
             return p;
         }
 
@@ -256,6 +296,7 @@ plinha lerFicheiroTxt(plinha p, pparagem* pp, int *n){
             linhaAtual = linhaAtual->prox;
         }
         linhaAtual->prox = nova;
+
         return p;
     }
 }

@@ -12,11 +12,11 @@ int main(){
     pparagem sistema = NULL; //adicionar paragens no array dinamico
     plinha linhas = NULL; //adicionar linhas na lista ligada
 
-    int total = 0;
+    int total = 0;  //numero de paragens no sistema
     int opt_inic, opt_perc, opt_lin, opt_parag;
 
-    sistema = recuperaParagens(&total);
-    linhas = recuperaLinhas();
+    sistema = recuperaParagens(&total); //Leitura do ficheiro binário das paragens
+    linhas = recuperaLinhas();  //Leitura do ficheiro binário das linhas
 
     do{
         opt_inic = menuInicial();
@@ -29,10 +29,10 @@ int main(){
                             percursoLinhaUnica(linhas);
                             break;
                         case 2:
-                            //linhamultipla();
+                            percursoLinhaTroca(linhas);
+                            //percursoLinhaTroca();
                             break;
                         default:
-                            printf("Opcao invalida!\n");
                             break;
                     }
                 }while(opt_perc != 3);
@@ -75,7 +75,6 @@ int main(){
                             listaParagens(sistema, total);
                             break;
                         default:
-                            printf("Nenhuma opcao valida inserida!\n");
                             break;
                     }
                 }while(opt_parag != 4);
@@ -88,7 +87,6 @@ int main(){
                 guardaLinhas(linhas);
                 break;
             default:
-                printf("Opcao invalida!\n");
                 break;
         }
     }while(opt_inic != 5);

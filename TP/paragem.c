@@ -2,7 +2,8 @@
 
 #include "paragem.h"
 
-paragem obtemInfo(paragem *tab, int n){
+//PEDE A INFORMAÇÃO RELATIVA A CADA NOVA PARAGEM
+paragem obtemInfo(pparagem tab, int n){
     paragem t;
     int existe, i;
 
@@ -12,9 +13,10 @@ paragem obtemInfo(paragem *tab, int n){
 
     do{
         existe = 0;
-        printf("Nome da paragem:");
+        printf("-> Nome da paragem:");
         scanf(" %99[^\n]", t.nome);
 
+        //Verifica se o nome inserido já se encontra no sistema (array dinamico)
         for(i = 0; i < n; i++){
             if(strcmp(t.nome, tab[i].nome) == 0){
                 printf("[AVISO] Paragem JA se encontra no sistema!\n\n");
@@ -31,17 +33,22 @@ paragem obtemInfo(paragem *tab, int n){
     return t;
 }
 
+//ALOCAR ESPAÇO PARA UMA PARAGEM E DEVOLVE A NOVA PARAGEM (COM A INFORMAÇÃO)
 pparagem regParagem(pparagem tab, int *n){
     char ch;
 
     do{
-        paragem *aux = realloc(tab, sizeof(paragem) * (*n+1));
+        pparagem aux = realloc(tab, sizeof(paragem) * (*n+1));  //Realocar espaço para nova paragem
 
         fflush(stdin);
         system("cls");
 
-        if(aux != NULL){
-            tab = aux;
+        if(aux == NULL){
+            printf("ERRO ao alocar memoria para a nova paragem!\n");
+            return tab;
+        }
+        else{
+            tab = aux;  //Ponteiro "tab" fica com o novo espaço de memória
             tab[*n] = obtemInfo(tab, *n);
             (*n)++;
         }
@@ -57,6 +64,7 @@ pparagem regParagem(pparagem tab, int *n){
     return tab;
 }
 
+//ELIMINA A PARAGEM COM O CODIGO INTRODUZIDO PELO UTILIZADOR
 pparagem elimParagem(pparagem tab, int *n){
     paragem t, *aux;
     int i;
@@ -83,12 +91,12 @@ pparagem elimParagem(pparagem tab, int *n){
         printf("Codigo da paragem a eliminar:");
         scanf(" %4[^\n]", cod);
 
-        for(i = 0; i < *n && (strcmp(tab[i].codigo,cod) != 0); i++);
+        for(i = 0; i < *n && (strcmp(tab[i].codigo,cod) != 0); i++);    //Procura a paragem com o codigo
 
         if(i == *n){    //Chegou ao fim e nao encontrou nenhuma paragem com esse nome
             printf("[AVISO] Nenhuma paragem com o codigo [ %s ]!\n", cod);
         }
-        else if(tab[i].numLinhas == 0){
+        else if(tab[i].numLinhas == 0){ //Pode ser eliminada porque não pertence a nenhuma linha
             if(*n == 1){   //So existe 1 paragem no sistema pelo que podemos dar free
                 printf("[AVISO] Paragem [ %s ] eliminada com sucesso!\n", tab[i].nome);
 
@@ -107,8 +115,7 @@ pparagem elimParagem(pparagem tab, int *n){
 
                 t = tab[i];
                 tab[i] = tab[*n-1];
-                aux = realloc(tab, sizeof(paragem) * (*n-1));
-
+                aux = realloc(tab, sizeof(paragem) * (*n-1));   //Libertar o espaço da paragem eliminada
 
                 if(aux != NULL){
                     tab = aux;
@@ -119,7 +126,7 @@ pparagem elimParagem(pparagem tab, int *n){
                 }
             }
         }
-        else if(tab[i].numLinhas != 0){
+        else if(tab[i].numLinhas != 0){ //Não pode ser eliminada porque pertence a alguma linha
             printf("Esta paragem pertence a %d linhas\n", tab[i].numLinhas);
             printf("Nao pode ser eliminada!!\n");
         }
@@ -135,7 +142,8 @@ pparagem elimParagem(pparagem tab, int *n){
     return tab;
 }
 
-void listaParagens(paragem *tab, int n){
+//LISTA TODAS AS PARAGENS REGISTADAS NO SISTEMA
+void listaParagens(pparagem tab, int n){
     char ch;
     int i;
 

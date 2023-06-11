@@ -2,30 +2,32 @@
 
 #include "utils.h"
 
+//GERAR CODIGO ALFANUMERICO DE 4 CARACTERES
 void gerarCodigo(char* cod){
-    char caracteres[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    int n_caracteres = sizeof(caracteres) - 1;
+    char ch[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    int n = sizeof(ch) - 1;
     srand(time(NULL));
 
     for(int i = 0; i < 4; i++){
-        cod[i] = caracteres[rand() % n_caracteres];
+        cod[i] = ch[rand() % n];
     }
     cod[4] = '\0';
 }
 
+//LER OS FICHEIROS DE TEXTO PERSONALIZADOS A SEREM USADOS COMO TITULOS
 int lerFich(char *nomeF){
-    FILE *fp = fopen(nomeF,"r");
-    if(fp == NULL) {
+    FILE *f = fopen(nomeF,"r");
+    if(f == NULL) {
         printf("ERRO: nao foi possivel abrir o ficheiro %s\n", nomeF);
-        fclose(fp);
+        fclose(f);
         return 1;
     }
 
     char buffer[MAX];
-    while(fgets(buffer, MAX, fp) != NULL)
+    while(fgets(buffer, MAX, f) != NULL)
         printf("%s", buffer);
 
-    fclose(fp);
+    fclose(f);
     return 0;
 }
 
